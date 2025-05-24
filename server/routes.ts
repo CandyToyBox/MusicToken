@@ -57,7 +57,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/songs/:id", async (req: Request, res: Response) => {
     try {
       const songId = parseInt(req.params.id);
-      const song = await storage.getSong(songId);
+      const song = await getStorage().getSong(songId);
       
       if (!song) {
         return res.status(404).json({ message: "Song not found" });
@@ -73,7 +73,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/songs", async (req: Request, res: Response) => {
     try {
       const songData = insertSongSchema.parse(req.body);
-      const song = await storage.createSong(songData);
+      const song = await getStorage().createSong(songData);
       
       // In a real app, we would handle file uploads to IPFS here
       // and then call deployToken after successful upload
@@ -91,7 +91,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/songs/:id/deploy", async (req: Request, res: Response) => {
     try {
       const songId = parseInt(req.params.id);
-      const song = await storage.getSong(songId);
+      const song = await getStorage().getSong(songId);
       
       if (!song) {
         return res.status(404).json({ message: "Song not found" });
@@ -105,7 +105,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       // Update song with token address
-      const updatedSong = await storage.updateSong(songId, {
+      const updatedSong = await getStorage().updateSong(songId, {
         tokenAddress: result.tokenAddress,
         status: "live"
       });
@@ -113,7 +113,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Create Farcaster frame if enabled
       if (song.enableFarcaster) {
         const frameUrl = await generateFarcasterFrame(updatedSong!);
-        await storage.updateSong(songId, { frameUrl });
+        await getStorage().updateSong(songId, { frameUrl });
       }
       
       return res.json(updatedSong);
@@ -127,7 +127,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/plays", async (req: Request, res: Response) => {
     try {
       const playData = insertPlaySchema.parse(req.body);
-      const play = await storage.recordPlay(playData);
+      const play = await getStorage().recordPlay(playData);
       
       // In a real app, we would record this play on the blockchain
       // by calling the song's token contract
@@ -145,13 +145,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/songs/:id/plays", async (req: Request, res: Response) => {
     try {
       const songId = parseInt(req.params.id);
-      const song = await storage.getSong(songId);
+      const song = await getStorage().getSong(songId);
       
       if (!song) {
         return res.status(404).json({ message: "Song not found" });
       }
       
-      const playCount = await storage.getPlayCount(songId);
+      const playCount = await getStorage().getPlayCount(songId);
       return res.json({ songId, playCount });
     } catch (error) {
       console.error("Error fetching play count:", error);
