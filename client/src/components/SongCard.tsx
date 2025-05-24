@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Song } from "@shared/schema";
 import AudioPlayer from "./AudioPlayer";
 import { OnchainKitClient } from "@/lib/onchainkit";

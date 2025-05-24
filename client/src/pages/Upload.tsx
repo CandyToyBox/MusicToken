@@ -1,9 +1,43 @@
 import SongUploadForm from "@/components/SongUploadForm";
-import { usePrivy } from "@/providers/PrivyProvider";
 import { Button } from "@/components/ui/button";
+import { useState, useEffect } from "react";
 
 export default function Upload() {
-  const { user, login } = usePrivy();
+  // Temporary mock implementation while we fix the Privy provider
+  const [user, setUser] = useState<{
+    isConnected: boolean;
+    walletAddress: string | null;
+  }>({
+    isConnected: false,
+    walletAddress: null
+  });
+  
+  useEffect(() => {
+    const savedUser = localStorage.getItem("soundtoken_user");
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
+    }
+  }, []);
+  
+  const login = async () => {
+    // Create a connected user
+    const newUser = {
+      isConnected: true,
+      walletAddress: "0x" + Math.random().toString(16).substring(2, 42),
+      farcasterUsername: `user_${Date.now().toString().slice(-4)}`,
+      fid: Math.floor(Math.random() * 10000)
+    };
+    
+    setUser(newUser);
+    localStorage.setItem("soundtoken_user", JSON.stringify(newUser));
+    
+    // Register the user on the backend
+    await fetch("/api/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newUser),
+    });
+  };
 
   // If user is not connected, show login prompt
   if (!user.isConnected) {

@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect } from "react";
-import { usePrivy } from "@/providers/PrivyProvider";
 import { ThirdwebClient } from "@/lib/thirdweb";
 import { useToast } from "@/hooks/use-toast";
 
@@ -23,7 +22,17 @@ export default function AudioPlayer({
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const { user } = usePrivy();
+  // Using local state for user data since we removed the Privy provider
+  const [user, setUser] = useState<{walletAddress: string | null}>({walletAddress: null});
+  
+  // Load user data from localStorage
+  useEffect(() => {
+    const savedUser = localStorage.getItem("soundtoken_user");
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
+    }
+  }, []);
+  
   const { toast } = useToast();
 
   // Initialize audio element

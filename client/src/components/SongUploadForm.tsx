@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -9,7 +9,6 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import { usePrivy } from "@/providers/PrivyProvider";
 import { IpfsClient } from "@/lib/ipfs";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
@@ -33,7 +32,21 @@ export default function SongUploadForm() {
   const [isUploading, setIsUploading] = useState(false);
   const songInputRef = useRef<HTMLInputElement>(null);
   const artworkInputRef = useRef<HTMLInputElement>(null);
-  const { user } = usePrivy();
+  const [user, setUser] = useState<{
+    isConnected: boolean;
+    walletAddress: string | null;
+  }>({
+    isConnected: false,
+    walletAddress: null
+  });
+  
+  useEffect(() => {
+    const savedUser = localStorage.getItem("soundtoken_user");
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
+    }
+  }, []);
+  
   const { toast } = useToast();
   const [_, navigate] = useLocation();
 

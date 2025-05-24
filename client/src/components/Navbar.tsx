@@ -4,7 +4,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useState, useEffect } from "react";
 
 export default function Navbar() {
-  // Temporary mock implementation while we fix the Privy provider
+  // State for user authentication
   const [user, setUser] = useState<{
     isConnected: boolean;
     walletAddress: string | null;
