@@ -16,17 +16,13 @@ export default function Home() {
             </p>
             <div className="mt-10 max-w-sm mx-auto sm:flex sm:justify-center md:mt-12">
               <div className="rounded-md shadow">
-                <Link href="/upload">
-                  <a className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-primary hover:bg-indigo-700 md:py-4 md:text-lg md:px-10 dark:bg-indigo-600 dark:hover:bg-indigo-700">
-                    Upload Your Song
-                  </a>
+                <Link href="/upload" className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-primary hover:bg-indigo-700 md:py-4 md:text-lg md:px-10 dark:bg-indigo-600 dark:hover:bg-indigo-700">
+                  Upload Your Song
                 </Link>
               </div>
               <div className="mt-3 rounded-md shadow sm:mt-0 sm:ml-3">
-                <Link href="/my-songs">
-                  <a className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-primary bg-white hover:bg-gray-50 md:py-4 md:text-lg md:px-10 dark:bg-gray-800 dark:text-blue-400 dark:hover:bg-gray-700">
-                    My Songs
-                  </a>
+                <Link href="/my-songs" className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-primary bg-white hover:bg-gray-50 md:py-4 md:text-lg md:px-10 dark:bg-gray-800 dark:text-blue-400 dark:hover:bg-gray-700">
+                  My Songs
                 </Link>
               </div>
             </div>

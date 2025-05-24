@@ -54,7 +54,7 @@ export default function SongUploadForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      userId: user.walletAddress ? parseInt(user.walletAddress.substring(2, 10), 16) % 1000 : 1,
+      userId: 1, // We'll set this dynamically when submitting
       title: "",
       description: "",
       genre: "Electronic",
@@ -126,7 +126,7 @@ export default function SongUploadForm() {
       // Create song
       const songData = {
         ...values,
-        userId: form.getValues().userId,
+        userId: user.walletAddress ? parseInt(user.walletAddress.substring(2, 10), 16) % 1000 : 1, // Generate deterministic user ID from wallet
         songUrl,
         artworkUrl,
       };
@@ -135,17 +135,42 @@ export default function SongUploadForm() {
       delete (songData as any).songFile;
       delete (songData as any).artworkFile;
       
-      const response = await apiRequest("POST", "/api/songs", songData);
-      const createdSong = await response.json();
+      // Create the song in the database
+      const response = await fetch("/api/songs", {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(songData)
+      });
       
-      // Deploy token contract
-      await apiRequest("POST", `/api/songs/${createdSong.id}/deploy`);
+      if (!response.ok) {
+        throw new Error(`Failed to create song: ${response.statusText}`);
+      }
+      
+      const createdSong = await response.json();
+      console.log("Song created successfully:", createdSong);
+      
+      // Deploy token contract to the blockchain
+      const deployResponse = await fetch(`/api/songs/${createdSong.id}/deploy`, {
+        method: "POST"
+      });
+      
+      if (!deployResponse.ok) {
+        throw new Error(`Failed to deploy token: ${deployResponse.statusText}`);
+      }
+      
+      const deployedToken = await deployResponse.json();
+      console.log("Token deployed successfully:", deployedToken);
       
       // Invalidate songs cache
       queryClient.invalidateQueries({ queryKey: ['/api/songs'] });
       
       // Show success notification
-      (window as any).showNotification("Song token created successfully!");
+      toast({
+        title: "Success!",
+        description: "Your song token has been created successfully!",
+      });
       
       // Redirect to songs page after a delay
       setTimeout(() => {
