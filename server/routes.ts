@@ -1,10 +1,13 @@
 import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
-import { storage } from "./storage";
 import { z } from "zod";
 import { insertSongSchema, insertPlaySchema } from "@shared/schema";
 import { deploySoundToken } from "./contracts/SoundToken";
 import { generateFarcasterFrame } from "./contracts/SoundToken";
+import { StorageFactory } from "./storage-factory";
+
+// Get the appropriate storage implementation
+const getStorage = () => StorageFactory.getStorage();
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // User authentication routes
@@ -13,13 +16,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const userData = req.body;
       
       // Check if user already exists
-      const existingUser = await storage.getUserByWalletAddress(userData.walletAddress);
+      const existingUser = await getStorage().getUserByWalletAddress(userData.walletAddress);
       if (existingUser) {
         return res.status(200).json(existingUser);
       }
       
       // Create new user
-      const newUser = await storage.createUser({
+      const newUser = await getStorage().createUser({
         username: userData.username || `user_${Date.now()}`,
         password: userData.password || `pass_${Date.now()}`, // In a real app, we'd use Privy for auth
         walletAddress: userData.walletAddress,
@@ -43,7 +46,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "Valid userId is required" });
       }
       
-      const songs = await storage.getSongsByUserId(userId);
+      const songs = await getStorage().getSongsByUserId(userId);
       return res.json(songs);
     } catch (error) {
       console.error("Error fetching songs:", error);

@@ -2,6 +2,7 @@ import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import { initDb } from "./db";
+import { StorageFactory } from "./storage-factory";
 
 const app = express();
 app.use(express.json());
@@ -40,9 +41,36 @@ app.use((req, res, next) => {
 (async () => {
   // Initialize the database
   try {
-    await initDb();
-    log("Successfully connected to the database", "database");
+    const dbConnected = await initDb();
+    StorageFactory.setDatabaseConnected(dbConnected);
+    if (dbConnected) {
+      log("Successfully connected to the database", "database");
+      
+      // Push the database schema
+      if (process.env.NODE_ENV === "development") {
+        try {
+          const { exec } = await import("child_process");
+          exec("npm run db:push", (error, stdout, stderr) => {
+            if (error) {
+              log(`Error running database migration: ${error.message}`, "database");
+              return;
+            }
+            if (stderr) {
+              log(`Database migration warning: ${stderr}`, "database");
+              return;
+            }
+            log(`Database migration completed: ${stdout}`, "database");
+          });
+        } catch (error) {
+          log("Error running database migration script", "database");
+          console.error(error);
+        }
+      }
+    } else {
+      log("Warning: Database connection failed, using fallback storage", "database");
+    }
   } catch (error) {
+    StorageFactory.setDatabaseConnected(false);
     log("Warning: Database initialization failed, using fallback storage", "database");
     console.error(error);
   }
