@@ -172,8 +172,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "Song not found" });
       }
       
+      // Get plays from database
       const playCount = await getStorage().getPlayCount(songId);
-      return res.json({ songId, playCount });
+      
+      // Update song metadata with the play count
+      if (song.metadata === null || typeof song.metadata !== 'object') {
+        song.metadata = {};
+      }
+      
+      // Add play count to metadata
+      const updatedMetadata = {
+        ...(typeof song.metadata === 'object' ? song.metadata : {}),
+        playCount
+      };
+      
+      // Update the song with the new metadata
+      await getStorage().updateSong(songId, { 
+        metadata: updatedMetadata 
+      });
+      
+      return res.json({ 
+        songId, 
+        playCount,
+        tokenAddress: song.tokenAddress,
+        status: song.status 
+      });
     } catch (error) {
       console.error("Error fetching play count:", error);
       return res.status(500).json({ message: "Failed to fetch play count" });
