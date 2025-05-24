@@ -2,8 +2,7 @@ import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import { z } from "zod";
 import { insertSongSchema, insertPlaySchema } from "@shared/schema";
-import { deploySoundToken } from "./contracts/SoundToken";
-import { generateFarcasterFrame } from "./contracts/SoundToken";
+import { deploySoundToken, recordPlayOnChain, generateFarcasterFrame } from "./contracts/SoundToken";
 import { StorageFactory } from "./storage-factory";
 
 // Get the appropriate storage implementation
@@ -127,10 +126,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/plays", async (req: Request, res: Response) => {
     try {
       const playData = insertPlaySchema.parse(req.body);
-      const play = await getStorage().recordPlay(playData);
       
-      // In a real app, we would record this play on the blockchain
-      // by calling the song's token contract
+      // Get the song details to find the token address
+      const song = await getStorage().getSong(playData.songId);
+      if (!song) {
+        return res.status(404).json({ message: "Song not found" });
+      }
+      
+      // Only attempt to record on blockchain if token exists
+      if (song.tokenAddress && playData.walletAddress) {
+        // Record the play on the blockchain
+        const onchainResult = await recordPlayOnChain(
+          playData.songId,
+          song.tokenAddress,
+          playData.walletAddress
+        );
+        
+        if (onchainResult.success) {
+          // Add transaction hash to play data
+          playData.transactionHash = onchainResult.transactionHash;
+        } else {
+          console.warn("Could not record play on blockchain:", onchainResult.error);
+        }
+      }
+      
+      // Record the play in our database regardless of blockchain result
+      const play = await getStorage().recordPlay(playData);
       
       return res.status(201).json(play);
     } catch (error) {

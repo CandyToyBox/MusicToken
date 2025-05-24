@@ -71,20 +71,14 @@ export default function Navbar() {
               <span className="font-bold text-xl text-gray-900 dark:text-white">SoundToken</span>
             </div>
             <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-              <Link href="/">
-                <a className={`${location === '/' ? 'border-primary text-gray-900 dark:text-white' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-300 dark:hover:text-white'} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium`}>
-                  Home
-                </a>
+              <Link href="/" className={`${location === '/' ? 'border-primary text-gray-900 dark:text-white' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-300 dark:hover:text-white'} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium`}>
+                Home
               </Link>
-              <Link href="/my-songs">
-                <a className={`${location === '/my-songs' ? 'border-primary text-gray-900 dark:text-white' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-300 dark:hover:text-white'} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium`}>
-                  My Songs
-                </a>
+              <Link href="/my-songs" className={`${location === '/my-songs' ? 'border-primary text-gray-900 dark:text-white' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-300 dark:hover:text-white'} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium`}>
+                My Songs
               </Link>
-              <Link href="/discover">
-                <a className={`${location === '/discover' ? 'border-primary text-gray-900 dark:text-white' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-300 dark:hover:text-white'} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium`}>
-                  Discover
-                </a>
+              <Link href="/upload" className={`${location === '/upload' ? 'border-primary text-gray-900 dark:text-white' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-300 dark:hover:text-white'} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium`}>
+                Upload
               </Link>
             </div>
           </div>
@@ -124,20 +118,14 @@ export default function Navbar() {
       {/* Mobile menu (hidden by default) */}
       <div className="sm:hidden hidden" id="mobile-menu">
         <div className="pt-2 pb-3 space-y-1">
-          <Link href="/">
-            <a className={`${location === '/' ? 'bg-indigo-50 border-primary text-primary dark:bg-gray-800' : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'} block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}>
-              Home
-            </a>
+          <Link href="/" className={`${location === '/' ? 'bg-indigo-50 border-primary text-primary dark:bg-gray-800' : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'} block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}>
+            Home
           </Link>
-          <Link href="/my-songs">
-            <a className={`${location === '/my-songs' ? 'bg-indigo-50 border-primary text-primary dark:bg-gray-800' : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'} block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}>
-              My Songs
-            </a>
+          <Link href="/my-songs" className={`${location === '/my-songs' ? 'bg-indigo-50 border-primary text-primary dark:bg-gray-800' : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'} block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}>
+            My Songs
           </Link>
-          <Link href="/discover">
-            <a className={`${location === '/discover' ? 'bg-indigo-50 border-primary text-primary dark:bg-gray-800' : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'} block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}>
-              Discover
-            </a>
+          <Link href="/upload" className={`${location === '/upload' ? 'bg-indigo-50 border-primary text-primary dark:bg-gray-800' : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'} block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}>
+            Upload
           </Link>
         </div>
         {user.isConnected && (

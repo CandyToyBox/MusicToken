@@ -94,7 +94,7 @@ export default function SongCard({ song }: SongCardProps) {
             </div>
             <div>
               <span className="text-gray-500 dark:text-gray-400">Plays:</span>
-              <span className="font-medium ml-1 dark:text-white">{song.metadata?.playCount || 0}</span>
+              <span className="font-medium ml-1 dark:text-white">{song.metadata && typeof song.metadata === 'object' ? (song.metadata as any).playCount || 0 : 0}</span>
             </div>
           </div>
           <div className="mt-2 flex items-center text-xs text-gray-500 dark:text-gray-400">
@@ -117,11 +117,9 @@ export default function SongCard({ song }: SongCardProps) {
             <i className="fas fa-share-nodes mr-2"></i>
             Share
           </button>
-          <Link href={`/songs/${song.id}`}>
-            <a className="flex-1 inline-flex justify-center items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary dark:bg-indigo-600 dark:hover:bg-indigo-700">
-              <i className="fas fa-info-circle mr-2"></i>
-              Details
-            </a>
+          <Link href={`/songs/${song.id}`} className="flex-1 inline-flex justify-center items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary dark:bg-indigo-600 dark:hover:bg-indigo-700">
+            <i className="fas fa-info-circle mr-2"></i>
+            Details
           </Link>
         </div>
       </div>
