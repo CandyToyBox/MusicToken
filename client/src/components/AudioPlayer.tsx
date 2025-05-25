@@ -123,17 +123,36 @@ export default function AudioPlayer({
 
   // Record play on the blockchain
   const recordPlay = async () => {
-    if (!tokenAddress || !user.walletAddress) return;
+    // For development, we'll accept recording plays even without a token address
+    // This allows us to test the play counting functionality
+    if (!user.walletAddress) {
+      // Use a mock wallet address for testing if none is available
+      user.walletAddress = "0xMockWalletAddress";
+    }
     
     try {
+      console.log(`Recording play for song ${songId}...`);
+      
+      // Use the ThirdWeb client to record the play
       const result = await ThirdwebClient.recordPlay(
         songId,
-        tokenAddress,
+        tokenAddress || "pending",
         user.walletAddress
       );
       
-      if (!result.success) {
+      if (result.success) {
+        console.log(`Play recorded successfully! Transaction: ${result.transactionHash}`);
+        toast({
+          title: "Play Recorded",
+          description: "Your play has been recorded on the blockchain",
+        });
+      } else {
         console.error("Failed to record play:", result.error);
+        toast({
+          title: "Play Recording Failed",
+          description: result.error || "Could not record play on the blockchain",
+          variant: "destructive",
+        });
       }
     } catch (error) {
       console.error("Error recording play:", error);

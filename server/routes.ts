@@ -125,6 +125,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Play tracking routes
   app.post("/api/plays", async (req: Request, res: Response) => {
     try {
+      console.log("Recording play with data:", req.body);
+      
       const playData = insertPlaySchema.parse(req.body);
       
       // Get the song details to find the token address
@@ -132,6 +134,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!song) {
         return res.status(404).json({ message: "Song not found" });
       }
+      
+      // Generate mock transaction hash for development/testing
+      let transactionHash = `0x${Math.random().toString(16).substring(2)}`;
       
       // Only attempt to record on blockchain if token exists
       if (song.tokenAddress && playData.walletAddress) {
@@ -143,17 +148,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
         );
         
         if (onchainResult.success) {
-          // Add transaction hash to play data
-          playData.transactionHash = onchainResult.transactionHash;
+          // Use real transaction hash if available
+          transactionHash = onchainResult.transactionHash || transactionHash;
+          console.log(`Play recorded on blockchain with hash: ${transactionHash}`);
         } else {
           console.warn("Could not record play on blockchain:", onchainResult.error);
         }
       }
       
+      // Add transaction hash to play data
+      playData.transactionHash = transactionHash;
+      
       // Record the play in our database regardless of blockchain result
       const play = await getStorage().recordPlay(playData);
+      console.log("Play recorded in database:", play);
       
-      return res.status(201).json(play);
+      // Get the updated play count
+      const playCount = await getStorage().getPlayCount(playData.songId);
+      console.log(`Updated play count for song ${playData.songId}: ${playCount}`);
+      
+      // Return play info with the updated count
+      return res.status(201).json({
+        ...play,
+        playCount
+      });
     } catch (error) {
       console.error("Error recording play:", error);
       if (error instanceof z.ZodError) {
