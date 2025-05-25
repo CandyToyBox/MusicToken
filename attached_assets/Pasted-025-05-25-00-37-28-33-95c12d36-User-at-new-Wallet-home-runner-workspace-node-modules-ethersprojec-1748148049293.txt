@@ -1,0 +1,104 @@
+025-05-25 00:37:28.33
+95c12d36
+User
+at new Wallet (/home/runner/workspace/node_modules/@ethersproject/wallet/lib/index.js:120:36)
+2025-05-25 00:37:28.33
+95c12d36
+User
+at ThirdwebSDK.fromPrivateKey (/home/runner/workspace/node_modules/@thirdweb-dev/sdk/dist/sdk-2d98b455.cjs.prod.js:1744:20)
+2025-05-25 00:37:28.33
+95c12d36
+User
+at getThirdwebClient (file:///home/runner/workspace/dist/index.js:69:26)
+2025-05-25 00:37:28.33
+95c12d36
+User
+at deploySoundTokenWithThirdweb (file:///home/runner/workspace/dist/index.js:21:17)
+2025-05-25 00:37:28.33
+95c12d36
+User
+at deploySoundToken (file:///home/runner/workspace/dist/index.js:158:12) {
+2025-05-25 00:37:28.33
+95c12d36
+User
+reason: 'invalid hexlify value',
+2025-05-25 00:37:28.33
+95c12d36
+User
+code: 'INVALID_ARGUMENT',
+2025-05-25 00:37:28.33
+95c12d36
+User
+argument: 'value',
+2025-05-25 00:37:28.33
+95c12d36
+User
+value: '3OSpr3yWqINEMSfPFipQ7wdNLdqzJQ-zeis2roDVcwV1K5L2UIW__MRsVuT49w94hZ_vMuXDveRsd85l0w-XtA'
+2025-05-25 00:37:28.33
+95c12d36
+User
+}
+2025-05-25 00:39:16.85
+95c12d36
+User
+Error deploying sound token with ThirdWeb: Error: invalid hexlify value (argument="value", value="3OSpr3yWqINEMSfPFipQ7wdNLdqzJQ-zeis2roDVcwV1K5L2UIW__MRsVuT49w94hZ_vMuXDveRsd85l0w-XtA", code=INVALID_ARGUMENT, version=bytes/5.8.0)
+2025-05-25 00:39:16.85
+95c12d36
+User
+at Logger.makeError (/home/runner/workspace/node_modules/@ethersproject/logger/lib/index.js:238:21)
+2025-05-25 00:39:16.85
+95c12d36
+User
+at Logger.throwError (/home/runner/workspace/node_modules/@ethersproject/logger/lib/index.js:247:20)
+2025-05-25 00:39:16.85
+95c12d36
+User
+at Logger.throwArgumentError (/home/runner/workspace/node_modules/@ethersproject/logger/lib/index.js:250:21)
+2025-05-25 00:39:16.85
+95c12d36
+User
+at hexlify (/home/runner/workspace/node_modules/@ethersproject/bytes/lib/index.js:200:19)
+2025-05-25 00:39:16.85
+95c12d36
+User
+at new SigningKey (/home/runner/workspace/node_modules/@ethersproject/signing-key/lib/index.js:20:82)
+2025-05-25 00:39:16.85
+95c12d36
+User
+at new Wallet (/home/runner/workspace/node_modules/@ethersproject/wallet/lib/index.js:120:36)
+2025-05-25 00:39:16.85
+95c12d36
+User
+at ThirdwebSDK.fromPrivateKey (/home/runner/workspace/node_modules/@thirdweb-dev/sdk/dist/sdk-2d98b455.cjs.prod.js:1744:20)
+2025-05-25 00:39:16.85
+95c12d36
+User
+at getThirdwebClient (file:///home/runner/workspace/dist/index.js:69:26)
+2025-05-25 00:39:16.85
+95c12d36
+User
+at deploySoundTokenWithThirdweb (file:///home/runner/workspace/dist/index.js:21:17)
+2025-05-25 00:39:16.85
+95c12d36
+User
+at deploySoundToken (file:///home/runner/workspace/dist/index.js:158:12) {
+2025-05-25 00:39:16.85
+95c12d36
+User
+reason: 'invalid hexlify value',
+2025-05-25 00:39:16.85
+95c12d36
+User
+code: 'INVALID_ARGUMENT',
+2025-05-25 00:39:16.85
+95c12d36
+User
+argument: 'value',
+2025-05-25 00:39:16.85
+95c12d36
+User
+value: '3OSpr3yWqINEMSfPFipQ7wdNLdqzJQ-zeis2roDVcwV1K5L2UIW__MRsVuT49w94hZ_vMuXDveRsd85l0w-XtA'
+2025-05-25 00:39:16.85
+95c12d36
+User
+}
