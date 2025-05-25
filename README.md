@@ -2,61 +2,91 @@
 
 A decentralized music platform that enables musicians to create non-tradeable song tokens with on-chain play tracking and engagement features on the Base blockchain.
 
-## Getting Started with Real Blockchain Integration
+## Getting Started with ThirdWeb and Base Blockchain
 
-To deploy real song tokens and record actual blockchain data, follow these steps:
+### Step 1: Set Up a ThirdWeb Account
 
-### Prerequisites
+1. **Create an Account**: 
+   - Visit [ThirdWeb's website](https://thirdweb.com/) and sign up for an account
+   - You'll need to connect a wallet (like MetaMask) during this process
 
-1. **ThirdWeb Account Setup**
-   - Create an account at [ThirdWeb](https://thirdweb.com/)
-   - Generate a project API key
-   - Create a Vault Admin Account (for secure token management)
+2. **Create a New Project**:
+   - From your dashboard, create a new project
+   - Give it a name like "Onchain Music Platform"
+   - This will generate a Client ID for your application
 
-2. **Base Sepolia Testnet**
-   - This project uses Base Sepolia Testnet for development
-   - You'll need some test ETH for transactions (available from faucets)
+3. **Set Up Vault Wallet**:
+   - In your ThirdWeb dashboard, navigate to "Wallets" section
+   - Create a new "Vault Wallet" - this is a secure way to manage private keys
+   - This will generate a Vault Admin Key and Vault Access Token
 
-3. **Environment Configuration**
-   - Set up the following environment variables:
-     - `THIRDWEB_CLIENT_ID`: Your ThirdWeb project client ID
-     - `THIRDWEB_VAULT_TOKEN`: Your ThirdWeb Vault Access Token
+### Step 2: Configure the Base Sepolia Testnet
 
-### Deploying a Real Song Token
+1. **Add Base Sepolia to Your Wallet**:
+   - Open MetaMask or your preferred wallet
+   - Add the Base Sepolia network:
+     - Network Name: Base Sepolia Testnet
+     - RPC URL: https://sepolia.base.org
+     - Chain ID: 84532
+     - Currency Symbol: ETH
 
-1. **Upload a Song**
-   - Use the platform to upload your song audio and artwork
-   - Fill in token details (name, symbol, description)
-   - Submit the form to create a pending song entry
+2. **Get Test ETH**:
+   - You'll need test ETH to deploy contracts and make transactions
+   - Visit the [Base Sepolia Faucet](https://www.coinbase.com/faucets/base-sepolia-faucet)
+   - Enter your wallet address to receive test ETH
 
-2. **Deploy to Blockchain**
-   - Navigate to your song details page
+### Step 3: Add ThirdWeb Credentials to Your Application
+
+1. **Set Environment Variables**:
+   - Add the following environment variables to your application:
+     ```
+     THIRDWEB_CLIENT_ID=your_client_id_here
+     THIRDWEB_VAULT_TOKEN=your_vault_access_token_here
+     ```
+   - These values come from your ThirdWeb dashboard
+
+2. **Restart Your Application**:
+   - Once the environment variables are set, restart your application
+   - The application will automatically detect the credentials and switch to real blockchain mode
+
+### Step 4: Test Contract Deployment
+
+1. **Upload a Song**:
+   - Use your application to upload a song
+   - Fill in all the required metadata and token information
+
+2. **Deploy the Token**:
+   - Navigate to the song detail page
    - Click the "Deploy to Blockchain" button
-   - The system will deploy a SoundToken contract to Base Sepolia Testnet
-   - This creates a unique, non-transferable token representing your song
+   - Wait for the deployment to complete
+   - The console logs will show real blockchain interactions
 
-3. **Verify Deployment**
-   - After deployment completes, your song status will change to "Live"
-   - You can view the token address and transaction details
-   - The token is viewable on BaseScan explorer
+3. **Verify Deployment**:
+   - After deployment, your song will show a token address
+   - You can visit [Base Sepolia Explorer](https://sepolia.basescan.org/) and paste the token address to view your contract on-chain
 
-### Recording Plays On-Chain
+### Step 5: Test On-Chain Play Recording
 
-When a user plays a song with a deployed token:
+1. **Play a Song**:
+   - Use the audio player to play a song that has been deployed
+   - The play will be recorded on the blockchain
+   - A transaction hash will be generated
 
-1. The play is recorded to the blockchain via the SoundToken contract
-2. A transaction hash is generated and stored in the database
-3. The play count increases on-chain, providing transparent metrics
-4. Each play is tracked with the listener's wallet address
+2. **Verify Play Recording**:
+   - The play count will increase in the UI
+   - The transaction will be visible in the "Blockchain Transactions" section
+   - You can click on the transaction hash to view it on BaseScan
 
-### Viewing Blockchain Data
+### Step 6: Monitor Your Contracts
 
-The platform provides:
+1. **ThirdWeb Dashboard**:
+   - Visit your ThirdWeb dashboard
+   - Navigate to the "Contracts" section
+   - You'll see all your deployed contracts
 
-- Detailed blockchain analytics for each song
-- Play activity timeline with transaction history
-- Links to explore transactions on BaseScan
-- Unique listener metrics and token statistics
+2. **Base Blockchain Explorer**:
+   - Use [Base Sepolia Explorer](https://sepolia.basescan.org/) to view detailed transaction information
+   - You can monitor gas usage, transaction status, and contract interactions
 
 ## Technical Implementation
 
@@ -75,14 +105,20 @@ The SoundToken contract includes:
 - Unique listeners tracking
 - Transparent transaction history
 
-## Moving to Production
+## Best Practices for Production
 
-When moving to a production environment:
+1. **Gas Management**:
+   - Implement proper gas estimation before transactions
+   - Set appropriate gas limits to avoid transaction failures
 
-1. Switch from Base Sepolia Testnet to Base Mainnet
-2. Implement proper wallet management for gas fees
-3. Set up monitoring for transaction success and failures
-4. Configure alerts for contract interactions
+2. **Error Handling**:
+   - Add robust error handling for blockchain transactions
+   - Implement retry mechanisms for failed transactions
+
+3. **Moving to Mainnet**:
+   - When ready for production, switch from Base Sepolia to Base Mainnet
+   - Update the chain configuration in the ThirdWeb client
+   - Ensure you have real ETH for transaction fees
 
 ## Troubleshooting
 
