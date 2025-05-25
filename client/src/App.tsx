@@ -7,6 +7,7 @@ import Notification from "@/components/Notification";
 import Home from "@/pages/Home";
 import MySongs from "@/pages/MySongs";
 import Upload from "@/pages/Upload";
+import SongDetails from "@/pages/SongDetails";
 
 function Router() {
   return (
@@ -14,6 +15,7 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/my-songs" component={MySongs} />
       <Route path="/upload" component={Upload} />
+      <Route path="/songs/:id" component={SongDetails} />
       <Route component={NotFound} />
     </Switch>
   );
