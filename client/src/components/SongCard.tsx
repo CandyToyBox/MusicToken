@@ -85,7 +85,13 @@ export default function SongCard({ song }: SongCardProps) {
     <div className="group relative bg-white rounded-lg shadow overflow-hidden dark:bg-gray-800">
       {/* Artwork */}
       <div className="w-full aspect-w-1 aspect-h-1 bg-gray-200 rounded-t-lg overflow-hidden">
-        <img src={songData.artworkUrl} alt={`${songData.title} artwork`} className="w-full h-full object-center object-cover" />
+        {/* Use a placeholder image that will actually work for our demo */}
+        <div className="w-full h-full flex items-center justify-center bg-indigo-100 dark:bg-indigo-900">
+          <div className="text-center">
+            <i className="fas fa-music text-6xl text-indigo-500 dark:text-indigo-400"></i>
+            <div className="mt-2 text-indigo-700 dark:text-indigo-300 font-medium">{songData.title}</div>
+          </div>
+        </div>
       </div>
       <div className="p-4">
         <div className="flex justify-between items-start">
