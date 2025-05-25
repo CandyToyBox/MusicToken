@@ -1,0 +1,31 @@
+[vite] connecting...
+[vite] connected.
+Module "buffer" has been externalized for browser compatibility. Cannot access "buffer.Buffer" in client code. See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+Detected injected providers: 
+(2) [{…}, {…}]
+The configured WalletConnect 'metadata.url':https://d4b5985f-3914-45af-bfba-bc3dafa322d8-00-auusvhxqyjxs.picard.replit.dev/ differs from the actual page url:https://d4b5985f-3914-45af-bfba-bc3dafa322d8-00-auusvhxqyjxs.picard.replit.dev. This is probably unintended and can lead to issues.
+eth_accounts for coinbase_wallet: 
+Array []
+eth_accounts for metamask: 
+Array []
+Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
+WalletConnect Core is already initialized. This is probably a mistake and can lead to unexpected behavior. Init() was called 2 times.
+Origin https://d4b5985f-3914-45af-bfba-bc3dafa322d8-00-auusvhxqyjxs.picard.replit.dev not found on Allowlist - update configuration on cloud.reown.com
+Privy iframe failed to load:  
+Kc2 {type: "error"}
+Fetching play count for song 1
+Received play data: 
+Object {songId: 1, playCount: "0", tokenAddress: "0x626c6f636b73626c6f6f78", status: "live", recentPlays: Array(0)}
+Recording play for song 1...
+Recording play for song 1 with wallet 0xf309a7799583a and token 0x626c6f636b73626c6f6f78
+Play recorded successfully: 
+Object {id: 3, songId: 1, userId: null, walletAddress: "0xf309a7799583a", playedAt: "2025-05-25T04:25:35.240Z", …}
+Play recorded successfully! Transaction: 0x13f57333e7734
+Fetching play count for song 1
+Received play data: 
+Object {songId: 1, playCount: "1", tokenAddress: "0x626c6f636b73626c6f6f78", status: "live", recentPlays: Array(1)}
+Received play data: 
+Object {songId: 1, playCount: "1", tokenAddress: "0x626c6f636b73626c6f6f78", status: "live", recentPlays: Array(1)}
+Fetching play count for song 1
+Received play data: 
+Object {songId: 1, playCount: "1", tokenAddress: "0x626c6f636b73626c6f6f78", status: "live", recentPlays: Array(1)}
