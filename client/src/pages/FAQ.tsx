@@ -5,15 +5,15 @@ import { Link } from "wouter";
 export default function FAQ() {
   return (
     <div className="container mx-auto py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-3xl mx-auto">
-        <h1 className="text-4xl font-bold text-center mb-8 dark:text-white">Frequently Asked Questions</h1>
+      <div className="max-w-3xl mx-auto bg-white dark:bg-gray-800 p-8 rounded-lg shadow">
+        <h1 className="text-4xl font-bold text-center mb-8 text-gray-900 dark:text-white">Frequently Asked Questions</h1>
         
-        <Accordion type="single" collapsible className="w-full text-gray-800 dark:text-gray-200">
+        <Accordion type="single" collapsible className="w-full text-gray-900 dark:text-white">
           <AccordionItem value="item-1">
             <AccordionTrigger className="text-lg font-medium dark:text-white">
               What is SoundToken?
             </AccordionTrigger>
-            <AccordionContent className="text-gray-600 dark:text-gray-300">
+            <AccordionContent className="text-gray-900 dark:text-white">
               SoundToken is a decentralized music platform that creates non-tradeable ERC-20 tokens for your songs with on-chain play tracking. It allows artists to tokenize their music and have a transparent record of plays directly on the blockchain.
             </AccordionContent>
           </AccordionItem>
@@ -22,7 +22,7 @@ export default function FAQ() {
             <AccordionTrigger className="text-lg font-medium dark:text-white">
               What blockchain does SoundToken use?
             </AccordionTrigger>
-            <AccordionContent className="text-gray-600 dark:text-gray-300">
+            <AccordionContent className="text-gray-900 dark:text-white">
               SoundToken is built on Base, an Ethereum Layer 2 blockchain that provides low fees and fast transactions while maintaining the security of Ethereum.
             </AccordionContent>
           </AccordionItem>

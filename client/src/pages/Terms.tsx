@@ -1,10 +1,10 @@
 export default function Terms() {
   return (
     <div className="container mx-auto py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-3xl mx-auto">
-        <h1 className="text-4xl font-bold text-center mb-8 dark:text-white">Terms of Service</h1>
+      <div className="max-w-3xl mx-auto bg-white dark:bg-gray-800 p-8 rounded-lg shadow">
+        <h1 className="text-4xl font-bold text-center mb-8 text-gray-900 dark:text-white">Terms of Service</h1>
         
-        <div className="prose dark:prose-invert max-w-none text-gray-800 dark:text-gray-200">
+        <div className="prose dark:prose-invert max-w-none text-gray-900 dark:text-white">
           <p className="lead">
             These Terms of Service ("Terms") govern your access to and use of SoundToken, including any content, functionality and services offered on or through our website (the "Service").
           </p>
