@@ -367,8 +367,12 @@ export default function SongUploadForm() {
               <FormItem className="flex flex-row items-start space-x-3 space-y-0">
                 <FormControl>
                   <Checkbox
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
+                    checked={field.value === true}
+                    onCheckedChange={(checked) => {
+                      // Convert the indeterminate value to a boolean
+                      const boolValue = checked === true;
+                      field.onChange(boolValue);
+                    }}
                   />
                 </FormControl>
                 <div className="space-y-1 leading-none">

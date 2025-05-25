@@ -145,10 +145,29 @@ export default function SongDetails() {
                   {song.tokenAddress || "Deploying..."}
                 </span>
               </div>
+              {song.tokenAddress && (
+                <div className="mb-2">
+                  <span className="font-medium">NFT Marketplace:</span> 
+                  <a 
+                    href={`https://opensea.io/asset/base/${song.tokenAddress}/1`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="ml-2 text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300 underline"
+                  >
+                    Create NFT on OpenSea
+                  </a>
+                  <p className="text-xs text-gray-500 mt-1 ml-2 dark:text-gray-400">
+                    Your non-tradeable token can be wrapped as an NFT for display
+                  </p>
+                </div>
+              )}
               <div className="mb-2">
                 <span className="font-medium">Play Count:</span> 
                 <span className="ml-2 text-indigo-600 dark:text-indigo-400">
                   {playData ? playData.playCount : 0}
+                </span>
+                <span className="ml-2 text-xs text-gray-500 dark:text-gray-400">
+                  (Recorded on Base blockchain)
                 </span>
               </div>
             </div>

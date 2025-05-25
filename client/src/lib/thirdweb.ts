@@ -8,6 +8,8 @@ const BASE_CHAIN_ID = 8453; // Base mainnet chain ID
 export interface DeployTokenResult {
   success: boolean;
   tokenAddress?: string;
+  openSeaUrl?: string;
+  contractType?: string;
   error?: string;
 }
 
@@ -97,7 +99,7 @@ export const ThirdwebClient = {
     }
   },
   
-  // Deploy a new SoundToken contract using ThirdWeb SDK
+  // Deploy a new illiquid, non-tradeable SoundToken contract using ThirdWeb SDK
   deploySoundToken: async (song: Song): Promise<DeployTokenResult> => {
     try {
       // First, check if connected to Base network
@@ -109,19 +111,41 @@ export const ThirdwebClient = {
         }
       }
       
-      // For now, we'll use our backend API to handle the deployment
+      console.log("Deploying non-tradeable ERC-20 token for song:", song.title);
+      
+      // Prepare song metadata for the token contract
+      const songMetadata = {
+        title: song.title,
+        artist: song.tokenSymbol,
+        description: song.description,
+        imageUrl: song.artworkUrl,
+        audioUrl: song.songUrl,
+        genre: song.genre,
+        tokenName: song.tokenName,
+        tokenSymbol: song.tokenSymbol,
+        // Track plays on-chain
+        isNonTradeable: true,
+        recordPlaysOnChain: true,
+        // Include NFT marketplace information
+        nftMarketplaceCompatible: true
+      };
+      
+      // Use our backend API to handle the deployment
       // This ensures we have proper error handling and backend validation
       const response = await fetch(`/api/songs/${song.id}/deploy`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           clientId: THIRDWEB_CLIENT_ID,
-          songMetadata: {
-            title: song.title,
-            artist: song.tokenSymbol,
-            description: song.description,
-            imageUrl: song.artworkUrl,
-            audioUrl: song.songUrl,
+          songMetadata,
+          deploymentOptions: {
+            // These options ensure the token is non-tradeable but can record plays
+            transferable: false,
+            burnable: false,
+            mintable: true,
+            supplyType: "capped",
+            initialSupply: "1",
+            maxSupply: "1"
           }
         }),
       });
@@ -132,6 +156,24 @@ export const ThirdwebClient = {
       }
       
       const result = await response.json();
+      
+      // If successful, log the contract address and provide NFT marketplace URL
+      if (result.tokenAddress) {
+        console.log(`Token deployed successfully at: ${result.tokenAddress}`);
+        
+        // Generate OpenSea URL for creating NFT
+        const openSeaUrl = `https://opensea.io/asset/base/${result.tokenAddress}/1`;
+        console.log(`NFT marketplace URL: ${openSeaUrl}`);
+        
+        // Return the complete result
+        return {
+          success: true,
+          tokenAddress: result.tokenAddress,
+          openSeaUrl,
+          contractType: "Non-tradeable ERC-20 with on-chain play tracking"
+        };
+      }
+      
       return {
         success: true,
         tokenAddress: result.tokenAddress,
