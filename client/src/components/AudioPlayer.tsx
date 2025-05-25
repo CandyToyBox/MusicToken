@@ -35,37 +35,58 @@ export default function AudioPlayer({
   
   const { toast } = useToast();
 
-  // Initialize audio element
+  // Initialize audio element with mock functionality
   useEffect(() => {
-    const audio = new Audio(audioUrl);
-    audioRef.current = audio;
+    // In a real app, we would use the actual audio URL
+    // For the mock implementation, we'll simulate audio playback
     
-    // Set up event listeners
-    audio.addEventListener("loadedmetadata", () => {
-      setDuration(audio.duration);
-    });
+    // Create a mock audio object since we don't have real audio files
+    const mockAudio = {
+      play: () => Promise.resolve(),
+      pause: () => {},
+      duration: 180, // 3 minutes mock duration
+      currentTime: 0,
+      addEventListener: (event: string, callback: any) => {
+        if (event === "loadedmetadata") {
+          // Simulate metadata loaded
+          setTimeout(() => callback(), 100);
+        }
+      },
+      removeEventListener: () => {}
+    };
     
-    audio.addEventListener("timeupdate", () => {
-      setCurrentTime(audio.currentTime);
-      setProgress((audio.currentTime / audio.duration) * 100);
-    });
+    // Set initial duration
+    setDuration(mockAudio.duration);
     
-    audio.addEventListener("ended", () => {
-      setPlaying(false);
-      setProgress(0);
-      setCurrentTime(0);
-      if (onPlayStateChange) onPlayStateChange(false);
-    });
+    // Store reference to our mock audio object
+    audioRef.current = mockAudio as any;
+    
+    // Simulate timeupdate events when playing
+    let interval: number | null = null;
+    
+    if (playing) {
+      interval = window.setInterval(() => {
+        if (mockAudio.currentTime < mockAudio.duration) {
+          mockAudio.currentTime += 1;
+          setCurrentTime(mockAudio.currentTime);
+          setProgress((mockAudio.currentTime / mockAudio.duration) * 100);
+        } else {
+          // Ended
+          setPlaying(false);
+          setProgress(0);
+          mockAudio.currentTime = 0;
+          setCurrentTime(0);
+          if (onPlayStateChange) onPlayStateChange(false);
+          if (interval) clearInterval(interval);
+        }
+      }, 1000);
+    }
     
     // Clean up
     return () => {
-      audio.pause();
-      audio.src = "";
-      audio.removeEventListener("loadedmetadata", () => {});
-      audio.removeEventListener("timeupdate", () => {});
-      audio.removeEventListener("ended", () => {});
+      if (interval) clearInterval(interval);
     };
-  }, [audioUrl, onPlayStateChange]);
+  }, [audioUrl, playing, onPlayStateChange]);
 
   // Handle external playing state changes
   useEffect(() => {
