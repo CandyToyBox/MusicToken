@@ -60,7 +60,15 @@ export class MemStorage implements IStorage {
 
   async createUser(insertUser: InsertUser): Promise<User> {
     const id = this.userIdCounter++;
-    const user: User = { ...insertUser, id };
+    // Ensure optional fields are properly handled with null values
+    const user: User = { 
+      id,
+      username: insertUser.username,
+      password: insertUser.password,
+      walletAddress: insertUser.walletAddress || null,
+      farcasterUsername: insertUser.farcasterUsername || null,
+      fid: insertUser.fid || null
+    };
     this.users.set(id, user);
     return user;
   }
@@ -86,12 +94,22 @@ export class MemStorage implements IStorage {
     const id = this.songIdCounter++;
     const createdAt = new Date();
     const song: Song = { 
-      ...insertSong, 
-      id, 
-      createdAt,
+      id,
+      userId: insertSong.userId,
+      title: insertSong.title,
+      description: insertSong.description || null,
+      genre: insertSong.genre,
+      duration: insertSong.duration || null,
+      songUrl: insertSong.songUrl,
+      artworkUrl: insertSong.artworkUrl,
+      tokenName: insertSong.tokenName,
+      tokenSymbol: insertSong.tokenSymbol,
       status: "pending",
       tokenAddress: null,
-      frameUrl: null
+      enableFarcaster: insertSong.enableFarcaster ?? true,
+      frameUrl: null,
+      createdAt,
+      metadata: insertSong.metadata || {}
     };
     this.songs.set(id, song);
     return song;
@@ -122,7 +140,14 @@ export class MemStorage implements IStorage {
   async recordPlay(insertPlay: InsertPlay): Promise<Play> {
     const id = this.playIdCounter++;
     const playedAt = new Date();
-    const play: Play = { ...insertPlay, id, playedAt };
+    const play: Play = { 
+      id, 
+      songId: insertPlay.songId,
+      userId: insertPlay.userId || null,
+      walletAddress: insertPlay.walletAddress || null,
+      playedAt,
+      transactionHash: insertPlay.transactionHash || null
+    };
     this.plays.set(id, play);
     return play;
   }
