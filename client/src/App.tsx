@@ -8,6 +8,11 @@ import Home from "@/pages/Home";
 import MySongs from "@/pages/MySongs";
 import Upload from "@/pages/Upload";
 import SongDetails from "@/pages/SongDetails";
+import About from "@/pages/About";
+import FAQ from "@/pages/FAQ";
+import Contact from "@/pages/Contact";
+import Terms from "@/pages/Terms";
+import Privacy from "@/pages/Privacy";
 
 function Router() {
   return (
@@ -16,6 +21,11 @@ function Router() {
       <Route path="/my-songs" component={MySongs} />
       <Route path="/upload" component={Upload} />
       <Route path="/songs/:id" component={SongDetails} />
+      <Route path="/about" component={About} />
+      <Route path="/faq" component={FAQ} />
+      <Route path="/contact" component={Contact} />
+      <Route path="/terms" component={Terms} />
+      <Route path="/privacy" component={Privacy} />
       <Route component={NotFound} />
     </Switch>
   );
