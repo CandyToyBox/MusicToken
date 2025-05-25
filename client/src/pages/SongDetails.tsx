@@ -323,47 +323,169 @@ export default function SongDetails() {
               <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg mb-4">
                 <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-3">
                   <i className="fas fa-chart-line mr-2 text-indigo-500"></i>
-                  On-chain Play Statistics
+                  On-chain Analytics
                 </h3>
                 
-                <div className="flex flex-col space-y-3">
-                  <div className="grid grid-cols-3 gap-2">
-                    <div className="col-span-1 font-medium">Total Plays:</div>
-                    <div className="col-span-2">
-                      <span className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">
+                {/* Analytics Dashboard */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                  {/* Play Count Card */}
+                  <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm border border-gray-200 dark:border-gray-600">
+                    <div className="flex items-center justify-between">
+                      <div className="text-gray-500 dark:text-gray-400 text-sm">Total Plays</div>
+                      <div className="p-2 bg-green-100 dark:bg-green-900 rounded-full">
+                        <i className="fas fa-headphones text-green-600 dark:text-green-400"></i>
+                      </div>
+                    </div>
+                    <div className="mt-2">
+                      <span className="text-3xl font-bold text-gray-900 dark:text-white">
                         {playData ? playData.playCount : 0}
                       </span>
-                      <span className="ml-2 text-xs text-gray-500 dark:text-gray-400">
-                        verified on blockchain
-                      </span>
+                    </div>
+                    <div className="mt-2 text-xs text-green-600 dark:text-green-400">
+                      <i className="fas fa-check-circle mr-1"></i> Verified on Base blockchain
                     </div>
                   </div>
                   
-                  {playData && playData.recentPlays && playData.recentPlays.length > 0 && (
-                    <div className="grid grid-cols-3 gap-2">
-                      <div className="col-span-1 font-medium">Recent Plays:</div>
-                      <div className="col-span-2">
-                        <div className="max-h-32 overflow-y-auto pr-2">
-                          {playData.recentPlays.map((play: PlayRecord, index: number) => (
-                            <div key={index} className="mb-2 pb-2 border-b border-gray-200 dark:border-gray-600 last:border-0">
-                              <div className="flex items-center justify-between">
-                                <div className="text-sm font-medium">
-                                  {new Date(play.timestamp).toLocaleString()}
-                                </div>
-                                <div className="text-xs text-gray-500 dark:text-gray-400">
-                                  {formatAddress(play.walletAddress)}
-                                </div>
-                              </div>
-                              <div className="mt-1 text-xs font-mono text-gray-500 dark:text-gray-400 truncate">
-                                Tx: {play.transactionHash.substring(0, 18)}...
-                              </div>
-                            </div>
-                          ))}
-                        </div>
+                  {/* Unique Listeners Card */}
+                  <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm border border-gray-200 dark:border-gray-600">
+                    <div className="flex items-center justify-between">
+                      <div className="text-gray-500 dark:text-gray-400 text-sm">Unique Listeners</div>
+                      <div className="p-2 bg-blue-100 dark:bg-blue-900 rounded-full">
+                        <i className="fas fa-users text-blue-600 dark:text-blue-400"></i>
                       </div>
                     </div>
-                  )}
+                    <div className="mt-2">
+                      <span className="text-3xl font-bold text-gray-900 dark:text-white">
+                        {playData && playData.recentPlays ? 
+                          new Set(playData.recentPlays.map(play => play.walletAddress)).size : 0}
+                      </span>
+                    </div>
+                    <div className="mt-2 text-xs text-blue-600 dark:text-blue-400">
+                      <i className="fas fa-wallet mr-1"></i> Unique wallet addresses
+                    </div>
+                  </div>
+                  
+                  {/* Token Age Card */}
+                  <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm border border-gray-200 dark:border-gray-600">
+                    <div className="flex items-center justify-between">
+                      <div className="text-gray-500 dark:text-gray-400 text-sm">Token Age</div>
+                      <div className="p-2 bg-purple-100 dark:bg-purple-900 rounded-full">
+                        <i className="fas fa-clock text-purple-600 dark:text-purple-400"></i>
+                      </div>
+                    </div>
+                    <div className="mt-2">
+                      <span className="text-3xl font-bold text-gray-900 dark:text-white">
+                        {song.createdAt ? Math.floor((new Date().getTime() - new Date(song.createdAt).getTime()) / (1000 * 3600 * 24)) : 0}
+                      </span>
+                      <span className="ml-1 text-gray-500 dark:text-gray-400">days</span>
+                    </div>
+                    <div className="mt-2 text-xs text-purple-600 dark:text-purple-400">
+                      <i className="fas fa-calendar-alt mr-1"></i> Since token creation
+                    </div>
+                  </div>
                 </div>
+                
+                {/* Play History Graph - Visual Representation */}
+                <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm border border-gray-200 dark:border-gray-600 mb-4">
+                  <div className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                    Play Activity Timeline
+                  </div>
+                  
+                  {/* Simple visual timeline representation */}
+                  <div className="relative h-8 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
+                    {playData && playData.recentPlays && playData.recentPlays.length > 0 ? (
+                      <>
+                        {playData.recentPlays.map((play: PlayRecord, index: number) => {
+                          const position = (new Date(play.timestamp).getTime() - new Date(playData.recentPlays[0].timestamp).getTime()) / 
+                            (new Date().getTime() - new Date(playData.recentPlays[0].timestamp).getTime() + 1) * 100;
+                          
+                          return (
+                            <div 
+                              key={index} 
+                              className="absolute w-2 h-2 rounded-full bg-indigo-500 transform -translate-y-1/2"
+                              style={{ 
+                                top: '50%', 
+                                left: `${Math.min(Math.max(position, 0), 100)}%`,
+                                zIndex: 10 + index
+                              }}
+                              title={new Date(play.timestamp).toLocaleString()}
+                            />
+                          );
+                        })}
+                        <div className="absolute left-0 top-0 h-full bg-indigo-200 dark:bg-indigo-900" 
+                          style={{ width: '100%' }} />
+                      </>
+                    ) : (
+                      <div className="flex items-center justify-center h-full text-gray-400 dark:text-gray-500 text-xs">
+                        No play data available
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    <div>
+                      {playData && playData.recentPlays && playData.recentPlays.length > 0 ? 
+                        new Date(playData.recentPlays[0].timestamp).toLocaleDateString() : 'Start'}
+                    </div>
+                    <div>Now</div>
+                  </div>
+                </div>
+                
+                {/* Recent Transactions */}
+                {playData && playData.recentPlays && playData.recentPlays.length > 0 && (
+                  <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm border border-gray-200 dark:border-gray-600">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                        Blockchain Transactions
+                      </div>
+                      <a 
+                        href={song.tokenAddress ? `https://basescan.org/address/${song.tokenAddress}` : '#'}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300"
+                      >
+                        View All <i className="fas fa-external-link-alt ml-1"></i>
+                      </a>
+                    </div>
+                    
+                    <div className="max-h-64 overflow-y-auto pr-2">
+                      <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                        <thead className="bg-gray-50 dark:bg-gray-900/50">
+                          <tr>
+                            <th scope="col" className="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Time</th>
+                            <th scope="col" className="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Wallet</th>
+                            <th scope="col" className="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Transaction</th>
+                          </tr>
+                        </thead>
+                        <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                          {playData.recentPlays.map((play: PlayRecord, index: number) => (
+                            <tr key={index} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                              <td className="px-3 py-2 whitespace-nowrap text-xs text-gray-900 dark:text-gray-300">
+                                {new Date(play.timestamp).toLocaleString()}
+                              </td>
+                              <td className="px-3 py-2 whitespace-nowrap text-xs">
+                                <span className="text-gray-500 dark:text-gray-400 font-mono">
+                                  {formatAddress(play.walletAddress)}
+                                </span>
+                              </td>
+                              <td className="px-3 py-2 whitespace-nowrap text-xs">
+                                <a 
+                                  href={`https://basescan.org/tx/${play.transactionHash}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300 font-mono"
+                                >
+                                  {play.transactionHash.substring(0, 10)}...
+                                  <i className="fas fa-external-link-alt text-xs ml-1"></i>
+                                </a>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
             
