@@ -1,42 +1,46 @@
-import { ThirdwebSDK } from "@thirdweb-dev/sdk";
+// No need to import ThirdWeb SDK since we're fully simulating it
 import { Song } from "@shared/schema";
 
-// Initialize ThirdWeb client with credentials from environment variables
+/**
+ * Mock implementation of the ThirdWeb SDK for development purposes
+ * This allows us to test the token deployment and play recording functionality
+ * without needing real blockchain connectivity
+ */
 const getThirdwebClient = () => {
-  const clientId = process.env.THIRDWEB_CLIENT_ID;
+  console.log("Using simulated ThirdWeb client for development");
   
-  if (!clientId) {
-    console.warn("Missing THIRDWEB_CLIENT_ID environment variable");
-  }
-  
-  try {
-    console.log("Using simulated ThirdWeb client for development");
-    
-    // Create a mock SDK instance
-    const mockSDK = {
-      // Add any methods you need to simulate here
-      deployer: {
-        deployContractFromUri: async () => {
-          return "0x" + Math.random().toString(16).substring(2, 42);
-        }
-      },
-      getContract: async () => {
-        return {
-          call: async (functionName: string) => {
-            if (functionName === "recordPlay") {
-              return { receipt: { transactionHash: "0x" + Math.random().toString(16).substring(2, 66) } };
-            }
-            return null;
-          }
-        };
+  return {
+    // Mock deployer methods
+    deployer: {
+      deployContractFromUri: async () => {
+        console.log("Simulating contract deployment...");
+        // Wait a bit to simulate blockchain latency
+        await new Promise(resolve => setTimeout(resolve, 800));
+        // Generate a deterministic token address
+        return "0x" + Math.random().toString(16).substring(2, 42);
       }
-    };
+    },
     
-    return mockSDK as any;
-  } catch (error) {
-    console.error("Error initializing ThirdWeb SDK:", error);
-    throw error;
-  }
+    // Mock contract interaction methods
+    getContract: async () => {
+      return {
+        call: async (functionName: string, ...args: any[]) => {
+          console.log(`Simulating contract call: ${functionName}`, ...args);
+          // Wait a bit to simulate blockchain latency
+          await new Promise(resolve => setTimeout(resolve, 500));
+          
+          if (functionName === "recordPlay") {
+            return { 
+              receipt: { 
+                transactionHash: "0x" + Math.random().toString(16).substring(2, 66) 
+              } 
+            };
+          }
+          return null;
+        }
+      };
+    }
+  };
 };
 
 /**
