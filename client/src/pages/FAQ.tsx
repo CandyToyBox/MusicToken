@@ -8,7 +8,7 @@ export default function FAQ() {
       <div className="max-w-3xl mx-auto">
         <h1 className="text-4xl font-bold text-center mb-8 dark:text-white">Frequently Asked Questions</h1>
         
-        <Accordion type="single" collapsible className="w-full">
+        <Accordion type="single" collapsible className="w-full text-gray-800 dark:text-gray-200">
           <AccordionItem value="item-1">
             <AccordionTrigger className="text-lg font-medium dark:text-white">
               What is SoundToken?

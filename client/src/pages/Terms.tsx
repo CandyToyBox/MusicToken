@@ -4,7 +4,7 @@ export default function Terms() {
       <div className="max-w-3xl mx-auto">
         <h1 className="text-4xl font-bold text-center mb-8 dark:text-white">Terms of Service</h1>
         
-        <div className="prose dark:prose-invert max-w-none">
+        <div className="prose dark:prose-invert max-w-none text-gray-800 dark:text-gray-200">
           <p className="lead">
             These Terms of Service ("Terms") govern your access to and use of SoundToken, including any content, functionality and services offered on or through our website (the "Service").
           </p>

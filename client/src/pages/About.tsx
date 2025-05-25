@@ -7,8 +7,8 @@ export default function About() {
       <div className="max-w-3xl mx-auto">
         <h1 className="text-4xl font-bold text-center mb-8 dark:text-white">About SoundToken</h1>
         
-        <div className="prose dark:prose-invert max-w-none">
-          <p className="lead">
+        <div className="prose dark:prose-invert max-w-none text-gray-800 dark:text-gray-200">
+          <p className="lead text-lg font-medium text-gray-900 dark:text-gray-100">
             SoundToken is a decentralized music platform that creates non-tradeable ERC-20 tokens for songs with on-chain play tracking.
           </p>
           

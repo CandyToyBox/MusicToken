@@ -149,7 +149,7 @@ export default function Contact() {
               <i className="fas fa-envelope text-primary text-xl dark:text-indigo-400"></i>
             </div>
             <h3 className="text-lg font-medium mb-2 dark:text-white">Email</h3>
-            <p className="text-gray-600 dark:text-gray-300">contact@soundtoken.com</p>
+            <p className="text-gray-800 dark:text-gray-200">contact@soundtoken.com</p>
           </div>
           
           <div className="bg-white p-6 rounded-lg shadow dark:bg-gray-800">
@@ -157,7 +157,7 @@ export default function Contact() {
               <i className="fas fa-map-marker-alt text-primary text-xl dark:text-indigo-400"></i>
             </div>
             <h3 className="text-lg font-medium mb-2 dark:text-white">Location</h3>
-            <p className="text-gray-600 dark:text-gray-300">123 Blockchain Way<br />San Francisco, CA 94107</p>
+            <p className="text-gray-800 dark:text-gray-200">123 Blockchain Way<br />San Francisco, CA 94107</p>
           </div>
           
           <div className="bg-white p-6 rounded-lg shadow dark:bg-gray-800">
@@ -165,7 +165,7 @@ export default function Contact() {
               <i className="fas fa-headset text-primary text-xl dark:text-indigo-400"></i>
             </div>
             <h3 className="text-lg font-medium mb-2 dark:text-white">Support</h3>
-            <p className="text-gray-600 dark:text-gray-300">
+            <p className="text-gray-800 dark:text-gray-200">
               Join our Discord community<br />for real-time support
             </p>
           </div>
