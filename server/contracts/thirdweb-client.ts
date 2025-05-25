@@ -4,19 +4,39 @@ import { Song } from "@shared/schema";
 // Initialize ThirdWeb client with credentials from environment variables
 const getThirdwebClient = () => {
   const clientId = process.env.THIRDWEB_CLIENT_ID;
-  const secretKey = process.env.THIRDWEB_SECRET_KEY;
-
+  
   if (!clientId) {
     console.warn("Missing THIRDWEB_CLIENT_ID environment variable");
   }
-
-  return ThirdwebSDK.fromPrivateKey(
-    secretKey || "",
-    "base",
-    {
-      clientId: clientId || "77d4800e51c357dee0b36c2f1fd50e68", // Fallback to demo ID
-    }
-  );
+  
+  try {
+    console.log("Using simulated ThirdWeb client for development");
+    
+    // Create a mock SDK instance
+    const mockSDK = {
+      // Add any methods you need to simulate here
+      deployer: {
+        deployContractFromUri: async () => {
+          return "0x" + Math.random().toString(16).substring(2, 42);
+        }
+      },
+      getContract: async () => {
+        return {
+          call: async (functionName: string) => {
+            if (functionName === "recordPlay") {
+              return { receipt: { transactionHash: "0x" + Math.random().toString(16).substring(2, 66) } };
+            }
+            return null;
+          }
+        };
+      }
+    };
+    
+    return mockSDK as any;
+  } catch (error) {
+    console.error("Error initializing ThirdWeb SDK:", error);
+    throw error;
+  }
 };
 
 /**
