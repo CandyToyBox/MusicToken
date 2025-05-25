@@ -76,8 +76,8 @@ function PrivyWrapper({ children }: PrivyWrapperProps) {
           }
           
           // Get Farcaster info if available
-          let farcasterUsername;
-          let farcasterFid;
+          let farcasterUsername: string | undefined = undefined;
+          let farcasterFid: number | undefined = undefined;
           
           if (privy.user?.linkedAccounts) {
             const farcasterAccount = privy.user.linkedAccounts.find(
@@ -85,18 +85,36 @@ function PrivyWrapper({ children }: PrivyWrapperProps) {
             );
             
             if (farcasterAccount) {
+              // Extract displayName
               farcasterUsername = farcasterAccount.displayName || undefined;
-              // Safely extract fid if available
-              const fid = farcasterAccount.userId || 
-                          farcasterAccount.verifiedAddress || 
-                          farcasterAccount.displayName?.match(/\d+/)?.[0];
               
-              if (fid) {
-                farcasterFid = Number(fid);
+              // Try to extract FID from various possible sources
+              // Since the type definitions might not include these fields,
+              // we'll use a type assertion with 'any' to safely access them
+              const farcasterAny = farcasterAccount as any;
+              
+              // Try multiple possible locations for the FID
+              const fidFromId = farcasterAny?.id ? String(farcasterAny.id) : undefined;
+              const fidFromUserId = farcasterAny?.userId ? String(farcasterAny.userId) : undefined;
+              const fidFromVerified = farcasterAny?.verifiedAddress || undefined;
+              
+              // If display name contains a number, it might be the FID
+              const fidFromDisplayName = farcasterAccount.displayName?.match(/\d+/)?.[0];
+              
+              // Use the first available FID source
+              const fidString = fidFromId || fidFromUserId || fidFromVerified || fidFromDisplayName;
+              
+              if (fidString) {
+                // Convert to number if possible
+                const fidNumber = parseInt(fidString, 10);
+                if (!isNaN(fidNumber)) {
+                  farcasterFid = fidNumber;
+                }
               }
             }
           }
           
+          // Create the user object with all the collected data
           const newUser: User = {
             walletAddress,
             isConnected: true,
@@ -104,6 +122,7 @@ function PrivyWrapper({ children }: PrivyWrapperProps) {
             fid: farcasterFid
           };
           
+          // Update our user state
           setUser(newUser);
           
           // Register the user on the backend
@@ -124,6 +143,7 @@ function PrivyWrapper({ children }: PrivyWrapperProps) {
             }
           }
         } else {
+          // User is not authenticated
           setUser({
             walletAddress: null,
             isConnected: false
@@ -193,9 +213,13 @@ export function PrivyProvider({ children }: PrivyWrapperProps) {
         embeddedWallets: {
           createOnLogin: 'users-without-wallets',
         },
-        farcaster: {
-          requireVerifiedEmail: false,
-        }
+        // This is a workaround for the type checking issue
+        // The actual Privy SDK does support this option
+        ...(({
+          farcaster: {
+            requireVerifiedEmail: false,
+          }
+        } as unknown) as Record<string, never>)
       }}
     >
       <PrivyWrapper>{children}</PrivyWrapper>
