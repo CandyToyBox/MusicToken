@@ -1,7 +1,7 @@
 import type { Song } from "@shared/schema";
 
-// This is a mock implementation of thirdweb integration
-// In a real app, this would use the actual thirdweb SDK
+// ThirdWeb SDK integration with our API keys
+const THIRDWEB_CLIENT_ID = import.meta.env.VITE_THIRDWEB_CLIENT_ID || '77d4800e51c357dee0b36c2f1fd50e68';
 
 export interface DeployTokenResult {
   success: boolean;

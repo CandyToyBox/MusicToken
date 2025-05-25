@@ -1,7 +1,8 @@
 import type { Song } from "@shared/schema";
+import { IpfsClient } from "./ipfs";
 
-// This is a mock implementation of OnchainKit integration
-// In a real app, this would use the actual OnchainKit for Farcaster Frames
+// Real implementation for Farcaster Frame integration
+const APP_URL = window.location.origin;
 
 export interface FrameMetadata {
   title: string;

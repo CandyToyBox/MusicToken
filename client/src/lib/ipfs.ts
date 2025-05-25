@@ -1,24 +1,38 @@
-// This is a mock implementation of IPFS integration
-// In a real app, this would use an actual IPFS client like ipfs-http-client
+// IPFS integration using Infura API
+const INFURA_API_KEY = import.meta.env.VITE_INFURA_API_KEY || '177a22cbf89e4f24ad9d387546044fd4';
+const INFURA_IPFS_ENDPOINT = `https://ipfs.infura.io:5001/api/v0`;
 
 export const IpfsClient = {
-  // Upload a file to IPFS
+  // Upload a file to IPFS using Infura
   uploadFile: async (file: File): Promise<string> => {
     try {
-      // Since we're having issues with FormData, let's simplify this
-      // In a real app, this would upload to IPFS directly
-      // Here we'll bypass the upload and directly get mock URLs
-      
       if (!file) {
         throw new Error("No file provided");
       }
       
-      // Generate random mock URLs without actually uploading
-      if (file.type.startsWith("audio")) {
-        return `https://ipfs.example.com/song-${Date.now()}`;
-      } else {
-        return `https://ipfs.example.com/artwork-${Date.now()}`;
+      // For now, we'll use our backend to handle IPFS uploads
+      // since it's more reliable than direct browser uploads
+      
+      const formData = new FormData();
+      formData.append("file", file);
+      
+      // Use the appropriate endpoint based on file type
+      const endpoint = file.type.startsWith("audio") 
+        ? "/api/upload/song" 
+        : "/api/upload/artwork";
+      
+      const response = await fetch(endpoint, {
+        method: "POST",
+        body: formData
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to upload to IPFS");
       }
+      
+      const data = await response.json();
+      return data.url;
     } catch (error) {
       console.error("Error uploading to IPFS:", error);
       throw error;
@@ -28,12 +42,44 @@ export const IpfsClient = {
   // Upload song metadata to IPFS
   uploadMetadata: async (metadata: Record<string, any>): Promise<string> => {
     try {
-      // In a real app, we would upload to IPFS directly
-      // Here we'll just return a mock URL
-      return `https://ipfs.example.com/metadata-${Date.now()}`;
+      // Convert metadata to JSON
+      const metadataBlob = new Blob([JSON.stringify(metadata)], {
+        type: "application/json",
+      });
+      
+      // Create a File object from the Blob
+      const metadataFile = new File([metadataBlob], "metadata.json", {
+        type: "application/json",
+      });
+      
+      // Use our uploadFile function to upload the metadata file
+      const url = await IpfsClient.uploadFile(metadataFile);
+      return url;
     } catch (error) {
       console.error("Error uploading metadata:", error);
       throw error;
     }
   },
+  
+  // Get IPFS gateway URL for displaying content
+  getGatewayUrl: (ipfsUrl: string): string => {
+    // If the URL is already a gateway URL, return it
+    if (ipfsUrl.startsWith('http') && !ipfsUrl.includes('ipfs://')) {
+      return ipfsUrl;
+    }
+    
+    // Convert ipfs:// URLs to HTTP gateway URLs
+    if (ipfsUrl.startsWith('ipfs://')) {
+      const cid = ipfsUrl.substring(7);
+      return `https://ipfs.io/ipfs/${cid}`;
+    }
+    
+    // Handle CID directly
+    if (ipfsUrl.match(/^[a-zA-Z0-9]{46}$/)) {
+      return `https://ipfs.io/ipfs/${ipfsUrl}`;
+    }
+    
+    // Default to returning the original URL
+    return ipfsUrl;
+  }
 };

@@ -54,21 +54,15 @@ export function PrivyProvider({ children }: PrivyProviderProps) {
   // Login function
   const login = async () => {
     try {
-      // In a real app, this would use the Privy SDK to authenticate
-      const walletAddress = PrivyClient.generateRandomWalletAddress();
+      // Use the PrivyClient to login/connect wallet
+      const newUser = await PrivyClient.login();
       
-      // Create a mock user
-      const newUser = {
-        walletAddress,
-        isConnected: true,
-        farcasterUsername: `user_${Date.now().toString().slice(-4)}`,
-        fid: Math.floor(Math.random() * 10000),
-      };
+      setUser({
+        ...newUser,
+        fid: Math.floor(Math.random() * 10000), // Simulate a Farcaster ID
+      });
       
-      setUser(newUser);
-      localStorage.setItem("soundtoken_user", JSON.stringify(newUser));
-      
-      // In a real app, we would register the user on the backend
+      // Register the user on the backend
       await fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -84,9 +78,11 @@ export function PrivyProvider({ children }: PrivyProviderProps) {
   // Logout function
   const logout = async () => {
     try {
-      // In a real app, this would use the Privy SDK to logout
+      // Use the PrivyClient to logout/disconnect wallet
+      await PrivyClient.logout();
+      
+      // Update local state
       setUser({ walletAddress: null, isConnected: false });
-      localStorage.removeItem("soundtoken_user");
     } catch (error) {
       console.error("Logout error:", error);
       throw error;
