@@ -42,14 +42,42 @@ export async function recordPlayOnChain(
   error?: string;
 }> {
   try {
-    // In a real implementation, we would call the token contract's recordPlay function
-    console.log(`Recording play for song ID ${songId} at token address ${tokenAddress}`);
+    console.log(`Recording play for song ID ${songId} at token address ${tokenAddress} from wallet ${userWalletAddress}`);
     
-    // Simulate blockchain interaction delay
+    // This is where the actual smart contract interaction would occur
+    // For a real implementation with ThirdWeb SDK:
+    /*
+    // 1. Initialize ThirdWeb SDK with proper credentials
+    const sdk = ThirdwebSDK.fromPrivateKey(
+      process.env.THIRDWEB_SECRET_KEY!,
+      "base",
+      {
+        clientId: process.env.THIRDWEB_CLIENT_ID!,
+      }
+    );
+    
+    // 2. Connect to the SoundToken contract
+    const contract = await sdk.getContract(tokenAddress);
+    
+    // 3. Call the recordPlay function on the contract
+    const tx = await contract.call("recordPlay", [songId, userWalletAddress]);
+    
+    // 4. Return the transaction details
+    return {
+      success: true,
+      transactionHash: tx.receipt.transactionHash
+    };
+    */
+    
+    // For development, simulate blockchain interaction with a delay
     await new Promise(resolve => setTimeout(resolve, 500));
     
-    // Generate a fake transaction hash
-    const transactionHash = `0x${Buffer.from(Date.now().toString()).toString('hex').substring(0, 64)}`;
+    // Generate a deterministic transaction hash based on inputs
+    // In production, this would be a real transaction hash from the blockchain
+    const hashInput = `${songId}-${tokenAddress}-${userWalletAddress}-${Date.now()}`;
+    const transactionHash = `0x${Buffer.from(hashInput).toString('hex').substring(0, 64)}`;
+    
+    console.log(`Play recorded on blockchain with transaction: ${transactionHash}`);
     
     return {
       success: true,

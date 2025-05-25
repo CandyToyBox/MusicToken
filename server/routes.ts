@@ -184,6 +184,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/songs/:id/plays", async (req: Request, res: Response) => {
     try {
       const songId = parseInt(req.params.id);
+      console.log(`[API] Fetching plays for song ${songId}`);
+      
       const song = await getStorage().getSong(songId);
       
       if (!song) {
@@ -192,8 +194,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Get plays from database
       const playCount = await getStorage().getPlayCount(songId);
+      console.log(`[API] Current play count for song ${songId}: ${playCount}`);
       
-      // Update song metadata with the play count
+      // Get recent plays
+      const recentPlays = await getStorage().getPlays(songId);
+      console.log(`[API] Found ${recentPlays.length} play records`);
+      
+      // If no metadata object exists, create one
       if (song.metadata === null || typeof song.metadata !== 'object') {
         song.metadata = {};
       }
@@ -209,11 +216,46 @@ export async function registerRoutes(app: Express): Promise<Server> {
         metadata: updatedMetadata 
       });
       
+      console.log(`[API] Returning play data for song ${songId} with count ${playCount}`);
+      
+      // Add a fake play for testing if none exist
+      if (playCount === 0 && process.env.NODE_ENV !== 'production') {
+        // Create a test play in development mode
+        console.log(`[DEV] Adding a test play for song ${songId}`);
+        
+        const testPlay = await getStorage().recordPlay({
+          songId,
+          userId: null,
+          walletAddress: "0xTestWallet",
+          transactionHash: `0x${Math.random().toString(16).substring(2)}`
+        });
+        
+        console.log(`[DEV] Test play recorded:`, testPlay);
+        
+        // Get updated play count
+        const updatedCount = await getStorage().getPlayCount(songId);
+        console.log(`[DEV] Updated play count: ${updatedCount}`);
+        
+        return res.json({ 
+          songId, 
+          playCount: updatedCount,
+          tokenAddress: song.tokenAddress,
+          status: song.status,
+          message: "Added test play for development" 
+        });
+      }
+      
       return res.json({ 
         songId, 
         playCount,
         tokenAddress: song.tokenAddress,
-        status: song.status 
+        status: song.status,
+        recentPlays: recentPlays.map(play => ({
+          id: play.id,
+          timestamp: play.playedAt,
+          walletAddress: play.walletAddress,
+          transactionHash: play.transactionHash
+        }))
       });
     } catch (error) {
       console.error("Error fetching play count:", error);

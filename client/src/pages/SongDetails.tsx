@@ -25,18 +25,33 @@ export default function SongDetails() {
     },
   });
 
-  // Fetch play count
-  const { data: playData } = useQuery({
+  // Fetch play count with more frequent updates when playing
+  const { data: playData, refetch: refetchPlays } = useQuery({
     queryKey: ['/api/songs/plays', id],
     queryFn: async () => {
+      console.log(`Fetching play count for song ${id}`);
       const response = await fetch(`/api/songs/${id}/plays`);
       if (!response.ok) {
         throw new Error('Failed to fetch play count');
       }
-      return response.json();
+      const data = await response.json();
+      console.log(`Received play data:`, data);
+      return data;
     },
-    refetchInterval: isPlaying ? 10000 : false, // Refetch every 10 seconds if playing
+    refetchInterval: isPlaying ? 5000 : 30000, // Refetch more frequently if playing
   });
+  
+  // Trigger refetch after play state changes
+  useEffect(() => {
+    if (isPlaying) {
+      // Set up an interval to refetch plays while playing
+      const interval = setInterval(() => {
+        refetchPlays();
+      }, 5000);
+      
+      return () => clearInterval(interval);
+    }
+  }, [isPlaying, refetchPlays]);
 
   // Handle play state change
   const handlePlayStateChange = (playing: boolean) => {

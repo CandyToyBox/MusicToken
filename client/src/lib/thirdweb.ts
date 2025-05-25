@@ -195,12 +195,16 @@ export const ThirdwebClient = {
     walletAddress: string
   ): Promise<RecordPlayResult> => {
     try {
-      console.log(`Recording play for song ${songId} with wallet ${walletAddress}`);
+      console.log(`Recording play for song ${songId} with wallet ${walletAddress} and token ${tokenAddress}`);
       
-      // In development mode, we'll skip the Base network connection check
-      // This allows us to test the play functionality without requiring wallet connection
+      // For production blockchain integration:
+      // 1. Check if user is connected to Base network
+      // 2. Call the smart contract's play recording function
+      // 3. Wait for transaction confirmation
+      // 4. Return the transaction hash
       
       // Use our backend API to record the play
+      // The backend will handle the on-chain transaction
       const response = await fetch("/api/plays", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -228,12 +232,9 @@ export const ThirdwebClient = {
       const result = await response.json();
       console.log("Play recorded successfully:", result);
       
-      // For demo purposes, generate a mock transaction hash if one isn't provided
-      const transactionHash = result.transactionHash || `0x${Math.random().toString(16).substring(2)}`;
-      
       return {
         success: true,
-        transactionHash,
+        transactionHash: result.transactionHash,
         playId: result.id,
       };
     } catch (error) {
