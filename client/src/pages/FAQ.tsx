@@ -85,7 +85,7 @@ export default function FAQ() {
             <AccordionTrigger className="text-lg font-medium dark:text-white">
               Who owns the rights to my music?
             </AccordionTrigger>
-            <AccordionContent className="text-gray-600 dark:text-gray-300">
+            <AccordionContent className="text-gray-900 dark:text-white">
               You retain 100% of the rights to your music. SoundToken does not claim any ownership or rights to the content you upload. We simply provide the platform for you to tokenize and share your work.
             </AccordionContent>
           </AccordionItem>
@@ -94,7 +94,7 @@ export default function FAQ() {
             <AccordionTrigger className="text-lg font-medium dark:text-white">
               How do I get started?
             </AccordionTrigger>
-            <AccordionContent className="text-gray-600 dark:text-gray-300">
+            <AccordionContent className="text-gray-900 dark:text-white">
               Connect your wallet, navigate to the Upload page, fill out the form with your song details, upload your audio file and artwork, and create your token. Once processed, your song will be available in the "My Songs" section.
               
               <div className="mt-4">
