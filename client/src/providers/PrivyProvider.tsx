@@ -57,30 +57,77 @@ function PrivyWrapper({ children }: PrivyWrapperProps) {
         
         // Check if the user is already authenticated with Privy
         if (privy.authenticated) {
-          const walletAddress = privy.user?.wallet?.address || null;
+          // Get the wallet address - check linked wallets first
+          let walletAddress = null;
+          if (privy.user?.linkedAccounts) {
+            // Find Ethereum wallet
+            const walletAccount = privy.user.linkedAccounts.find(
+              account => account.type === 'wallet'
+            );
+            
+            if (walletAccount && walletAccount.walletClientType) {
+              walletAddress = walletAccount.address;
+            }
+          }
+          
+          // If no linked wallet, try embedded wallet
+          if (!walletAddress && privy.user?.wallet) {
+            walletAddress = privy.user.wallet.address;
+          }
           
           // Get Farcaster info if available
-          const farcasterData = privy.user?.linkedAccounts?.find(
-            account => account.type === 'farcaster'
-          );
+          let farcasterUsername;
+          let farcasterFid;
           
-          const newUser = {
+          if (privy.user?.linkedAccounts) {
+            const farcasterAccount = privy.user.linkedAccounts.find(
+              account => account.type === 'farcaster'
+            );
+            
+            if (farcasterAccount) {
+              farcasterUsername = farcasterAccount.displayName || undefined;
+              // Safely extract fid if available
+              const fid = farcasterAccount.userId || 
+                          farcasterAccount.verifiedAddress || 
+                          farcasterAccount.displayName?.match(/\d+/)?.[0];
+              
+              if (fid) {
+                farcasterFid = Number(fid);
+              }
+            }
+          }
+          
+          const newUser: User = {
             walletAddress,
             isConnected: true,
-            farcasterUsername: farcasterData?.displayName,
-            fid: farcasterData ? Number(farcasterData.id) : undefined,
+            farcasterUsername,
+            fid: farcasterFid
           };
           
           setUser(newUser);
           
           // Register the user on the backend
           if (walletAddress) {
-            await fetch("/api/auth/register", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(newUser),
-            });
+            try {
+              await fetch("/api/auth/register", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  walletAddress,
+                  farcasterUsername: farcasterUsername || null,
+                  fid: farcasterFid || null
+                }),
+              });
+              console.log("User registered with backend");
+            } catch (err) {
+              console.error("Failed to register user with backend:", err);
+            }
           }
+        } else {
+          setUser({
+            walletAddress: null,
+            isConnected: false
+          });
         }
       } catch (error) {
         console.error("Error initializing Privy:", error);
@@ -145,8 +192,10 @@ export function PrivyProvider({ children }: PrivyWrapperProps) {
         loginMethods: ['wallet', 'email', 'farcaster'],
         embeddedWallets: {
           createOnLogin: 'users-without-wallets',
-          noPromptOnSignature: false,
         },
+        farcaster: {
+          requireVerifiedEmail: false,
+        }
       }}
     >
       <PrivyWrapper>{children}</PrivyWrapper>

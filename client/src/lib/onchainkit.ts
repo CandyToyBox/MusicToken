@@ -1,6 +1,5 @@
 import type { Song } from "@shared/schema";
 import { IpfsClient } from "./ipfs";
-import { getFrame } from "@coinbase/onchainkit";
 
 // Real implementation for Farcaster Frame integration
 const APP_URL = window.location.origin;
@@ -13,7 +12,7 @@ export interface FrameMetadata {
 }
 
 export const OnchainKitClient = {
-  // Generate Farcaster Frame metadata for a song using OnchainKit
+  // Generate Farcaster Frame metadata for a song
   generateFrameMetadata: (song: Song): FrameMetadata => {
     const songUrl = `${APP_URL}/songs/${song.id}`;
     const imageUrl = song.artworkUrl;
@@ -31,29 +30,22 @@ export const OnchainKitClient = {
   // Generate Frame HTML for embedding in a Farcaster post
   generateFrameHtml: (song: Song): string => {
     const metadata = OnchainKitClient.generateFrameMetadata(song);
+    const songUrl = `${APP_URL}/songs/${song.id}`;
     
-    // Use OnchainKit to generate proper frame metadata tags
-    const frameMetadata = getFrame({
-      buttons: [
-        {
-          label: "Play Song",
-          action: "post"
-        },
-        {
-          label: "View Details",
-          action: "link",
-          target: `${APP_URL}/songs/${song.id}`
-        }
-      ],
-      image: {
-        src: metadata.image,
-        aspectRatio: "1:1"
-      },
-      input: {
-        text: "Leave a comment about this song...",
-      },
-      postUrl: `${APP_URL}/api/frame/action?songId=${song.id}`,
-    });
+    // Manually create Farcaster Frame metadata tags
+    // This follows the Farcaster Frames spec directly
+    const frameMetadataTags = `
+      <meta property="fc:frame" content="vNext" />
+      <meta property="fc:frame:image" content="${metadata.image}" />
+      <meta property="fc:frame:image:aspect_ratio" content="1:1" />
+      <meta property="fc:frame:button:1" content="Play Song" />
+      <meta property="fc:frame:button:1:action" content="post" />
+      <meta property="fc:frame:button:2" content="View Details" />
+      <meta property="fc:frame:button:2:action" content="link" />
+      <meta property="fc:frame:button:2:target" content="${songUrl}" />
+      <meta property="fc:frame:post_url" content="${APP_URL}/api/frame/action?songId=${song.id}" />
+      <meta property="fc:frame:input:text" content="Leave a comment about this song..." />
+    `;
     
     // Return the HTML with proper metadata tags
     return `
@@ -64,7 +56,7 @@ export const OnchainKitClient = {
           <meta property="og:title" content="${metadata.title}" />
           <meta property="og:description" content="${metadata.description}" />
           <meta property="og:image" content="${metadata.image}" />
-          ${frameMetadata}
+          ${frameMetadataTags}
         </head>
         <body>
           <h1>${metadata.title}</h1>
