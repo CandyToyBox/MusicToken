@@ -4,6 +4,7 @@ import { z } from "zod";
 import { insertSongSchema, insertPlaySchema } from "@shared/schema";
 import { deploySoundToken, recordPlayOnChain, generateFarcasterFrame } from "./contracts/SoundToken";
 import { StorageFactory } from "./storage-factory";
+import { registerAIRoutes } from "./routes/ai";
 
 // Get the appropriate storage implementation
 const getStorage = () => StorageFactory.getStorage();
@@ -276,6 +277,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     return res.json({ url: fileUrl });
   });
 
+  // Register AI routes
+  registerAIRoutes(app);
+  
   const httpServer = createServer(app);
   return httpServer;
 }
