@@ -1,27 +1,40 @@
 import { Song } from "@shared/schema";
+// This file is a wrapper around the ThirdwebDeployer for backward compatibility
+// In a real implementation, we'd directly use the ThirdwebDeployer
 
-// This is a mock implementation - in a real app, this would interact with thirdweb SDK
-// to deploy actual smart contracts on the Base blockchain
-
+/**
+ * Deploys a SoundToken contract for a song
+ * In a real implementation, this would use ThirdWeb SDK to deploy the contract
+ */
 export async function deploySoundToken(song: Song): Promise<{ 
   success: boolean; 
   tokenAddress?: string; 
+  openSeaUrl?: string;
+  contractType?: string;
   error?: string;
 }> {
   try {
-    // In a real implementation, we would use thirdweb SDK to deploy the contract
-    // For now, we'll simulate a successful deployment with a mock address
     console.log(`Deploying token for song: ${song.title}`);
     
+    // In production, this would import and use the ThirdwebDeployer:
+    // import { deploySoundTokenContract } from "./ThirdwebDeployer";
+    // return deploySoundTokenContract(song);
+    
+    // For now, we'll use a simulated implementation
     // Simulate blockchain interaction delay
     await new Promise(resolve => setTimeout(resolve, 1000));
     
     // Generate a deterministic but fake token address based on song details
     const tokenAddress = `0x${Buffer.from(song.title + song.tokenSymbol).toString('hex').substring(0, 40)}`;
     
+    // Generate a mock OpenSea URL
+    const openSeaUrl = `https://testnets.opensea.io/assets/base/${tokenAddress}/1`;
+    
     return {
       success: true,
-      tokenAddress
+      tokenAddress,
+      openSeaUrl,
+      contractType: "SoundToken"
     };
   } catch (error) {
     console.error("Error deploying sound token:", error);
@@ -44,30 +57,9 @@ export async function recordPlayOnChain(
   try {
     console.log(`Recording play for song ID ${songId} at token address ${tokenAddress} from wallet ${userWalletAddress}`);
     
-    // This is where the actual smart contract interaction would occur
-    // For a real implementation with ThirdWeb SDK:
-    /*
-    // 1. Initialize ThirdWeb SDK with proper credentials
-    const sdk = ThirdwebSDK.fromPrivateKey(
-      process.env.THIRDWEB_SECRET_KEY!,
-      "base",
-      {
-        clientId: process.env.THIRDWEB_CLIENT_ID!,
-      }
-    );
-    
-    // 2. Connect to the SoundToken contract
-    const contract = await sdk.getContract(tokenAddress);
-    
-    // 3. Call the recordPlay function on the contract
-    const tx = await contract.call("recordPlay", [songId, userWalletAddress]);
-    
-    // 4. Return the transaction details
-    return {
-      success: true,
-      transactionHash: tx.receipt.transactionHash
-    };
-    */
+    // In production, this would import and use the ThirdwebDeployer:
+    // import { recordPlayOnContract } from "./ThirdwebDeployer";
+    // return recordPlayOnContract(songId, tokenAddress, userWalletAddress);
     
     // For development, simulate blockchain interaction with a delay
     await new Promise(resolve => setTimeout(resolve, 500));
