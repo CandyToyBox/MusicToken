@@ -31,7 +31,7 @@ export default function FAQ() {
             <AccordionTrigger className="text-lg font-medium dark:text-white">
               What does "non-tradeable" token mean?
             </AccordionTrigger>
-            <AccordionContent className="text-gray-600 dark:text-gray-300">
+            <AccordionContent className="text-gray-900 dark:text-white">
               Unlike regular cryptocurrencies, SoundTokens cannot be bought, sold, or transferred between wallets. They are designed specifically to track plays and engagement, not as financial assets.
             </AccordionContent>
           </AccordionItem>
@@ -40,7 +40,7 @@ export default function FAQ() {
             <AccordionTrigger className="text-lg font-medium dark:text-white">
               How does on-chain play tracking work?
             </AccordionTrigger>
-            <AccordionContent className="text-gray-600 dark:text-gray-300">
+            <AccordionContent className="text-gray-900 dark:text-white">
               When someone plays your song, our platform records that play as a transaction on the Base blockchain. This creates a permanent, transparent record of each play that cannot be altered or deleted.
             </AccordionContent>
           </AccordionItem>
@@ -49,7 +49,7 @@ export default function FAQ() {
             <AccordionTrigger className="text-lg font-medium dark:text-white">
               What file formats are supported?
             </AccordionTrigger>
-            <AccordionContent className="text-gray-600 dark:text-gray-300">
+            <AccordionContent className="text-gray-900 dark:text-white">
               SoundToken currently supports MP3, WAV, and FLAC audio formats. For artwork, we support JPEG, PNG, and WebP images.
             </AccordionContent>
           </AccordionItem>
@@ -58,7 +58,7 @@ export default function FAQ() {
             <AccordionTrigger className="text-lg font-medium dark:text-white">
               What is Farcaster integration?
             </AccordionTrigger>
-            <AccordionContent className="text-gray-600 dark:text-gray-300">
+            <AccordionContent className="text-gray-900 dark:text-white">
               Farcaster is a decentralized social network. SoundToken integrates with Farcaster to allow you to share your tokenized songs with the Farcaster community through their frames feature, increasing your reach and engagement.
             </AccordionContent>
           </AccordionItem>
@@ -67,7 +67,7 @@ export default function FAQ() {
             <AccordionTrigger className="text-lg font-medium dark:text-white">
               Do I need a crypto wallet to use SoundToken?
             </AccordionTrigger>
-            <AccordionContent className="text-gray-600 dark:text-gray-300">
+            <AccordionContent className="text-gray-900 dark:text-white">
               Yes, you need a crypto wallet compatible with the Base blockchain to create and manage your SoundTokens. We recommend using Coinbase Wallet or MetaMask.
             </AccordionContent>
           </AccordionItem>
@@ -76,7 +76,7 @@ export default function FAQ() {
             <AccordionTrigger className="text-lg font-medium dark:text-white">
               Are there any fees for using SoundToken?
             </AccordionTrigger>
-            <AccordionContent className="text-gray-600 dark:text-gray-300">
+            <AccordionContent className="text-gray-900 dark:text-white">
               Creating a SoundToken requires a small amount of ETH on the Base blockchain to cover the gas fees for deploying your token contract. Once deployed, tracking plays is very inexpensive due to Base's low transaction costs.
             </AccordionContent>
           </AccordionItem>
@@ -107,8 +107,8 @@ export default function FAQ() {
         </Accordion>
         
         <div className="mt-12 text-center">
-          <h3 className="text-xl font-medium mb-4 dark:text-white">Still have questions?</h3>
-          <p className="text-gray-600 dark:text-gray-300 mb-6">
+          <h3 className="text-xl font-medium mb-4 text-gray-900 dark:text-white">Still have questions?</h3>
+          <p className="text-gray-900 dark:text-white mb-6">
             Reach out to our team and we'll get back to you as soon as possible.
           </p>
           <Button asChild variant="outline">
